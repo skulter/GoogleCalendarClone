@@ -1,25 +1,31 @@
 import tw, { styled } from 'twin.macro';
-import { ClassNames, DateFormatter, DayPicker, ModifiersClassNames } from 'react-day-picker';
+import { ClassNames, DateFormatter, DayPicker, ModifiersClassNames, SelectSingleEventHandler } from 'react-day-picker';
 import ko from 'date-fns/locale/ko';
 import 'react-day-picker/dist/style.css';
 import styles from 'react-day-picker/dist/style.module.css';
 import { format } from 'date-fns';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import AddScheduleButton from './AddScheduleButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { currentCalendar, setDay, setMonth } from '../store/modules/calendar';
 
+const LeftbarContainer = styled.div<{ isOpen: boolean }>`
+      ${tw`flex flex-col ml-3`}
+      ${tw`transition-all ease-linear duration-100`}
+      ${props => props.isOpen ? tw`w-64` : tw`w-0`}
+      
+`;
 
-const LeftbarContainer = styled.div`
-      ${tw`flex flex-col w-64 ml-3`}
-`
-const LeftbarDatePickerWrapper = styled.div`
+const LeftbarDatePickerWrapper = styled.div<{ isOpen: boolean }>`
+    ${props => props.isOpen ? '' : tw`hidden`}
     .head{
-        ${tw`text-[12px] text-gray-600 mt-3`}
+        ${tw`text-[14px] text-gray-600 mt-3`}
     }
     .table{
-        ${tw`w-[216px] text-[12px]`}
+        ${tw`w-[216px]`}
     }
     .row{
-        ${tw`h-8 text-[8px]`}
+        ${tw`h-8 text-[12px] font-semibold`}
         .cell{
             button{
                 ${tw`my-0 mx-auto w-5 h-5 mt-[1px]`}
@@ -45,13 +51,15 @@ const LeftbarDatePickerWrapper = styled.div`
     .selected{
         ${tw`text-blue-800 bg-blue-300`}
     }
-`
+    .outside{
+        ${tw`text-gray-500 font-normal`}
+    }
+`;
 
 const formatCaption: DateFormatter = (month, options) => (format(month, 'yyyy년 M월', { locale: options?.locale }));
 
 const classNames: ClassNames = {
     ...styles,
-    // root: 'root',
     caption: 'caption',
     nav: 'nav',
     head: 'head',
@@ -64,22 +72,34 @@ const classNames: ClassNames = {
 const modifiersClassNames: ModifiersClassNames = {
     today: 'today',
     selected: 'selected',
+    outside: 'outside'
 };
 
-const Leftbar = () => {
-    const [selectedDay, setSelectedDay] = useState<Date>();
+interface LeftbarProps {
+    isOpen: boolean,
+    setIsOpenModal: Dispatch<SetStateAction<boolean>>
+}
+
+const Leftbar = ({ isOpen, setIsOpenModal }: LeftbarProps) => {
+    const { selectDay, current } = useSelector(currentCalendar);
+    const dispatch = useDispatch();
     return (
-        <LeftbarContainer>
-            <AddScheduleButton />
-            <LeftbarDatePickerWrapper>
+        <LeftbarContainer isOpen={isOpen}>
+            <AddScheduleButton setIsOpenModal={setIsOpenModal} />
+            <LeftbarDatePickerWrapper isOpen={isOpen}>
                 <DayPicker
+                    showOutsideDays
+                    fixedWeeks
                     locale={ko}
                     classNames={classNames}
                     modifiersClassNames={modifiersClassNames}
                     mode="single"
                     formatters={{ formatCaption }}
-                    onSelect={setSelectedDay}
-                    selected={selectedDay} />
+                    month={new Date(`${current.year}-${current.month}`)}
+                    onMonthChange={(e: unknown) => dispatch(setMonth((e as Date).toString()))}
+                    onSelect={(e: unknown) => dispatch(setDay((e as Date).toString()))}
+                    selected={selectDay}
+                />
             </LeftbarDatePickerWrapper>
         </LeftbarContainer>
     );

@@ -1,7 +1,10 @@
-import { allTime } from "index";
+import { allTime } from "../index";
 export const getAllTimeArray = (): allTime[] => {
-    return [...Array(24).keys()].map((number, index) => {
-        return { hour: number, showHour: number < 13 ? `오전 ${number}시` : `오후 ${number % 12}시` }
+    return [...Array(24).keys()].map((number) => {
+        return {
+            hour: number,
+            showHour: number < 13 ? `오전 ${number === 0 ? 12 : number}` : `오후 ${number % 12}`
+        }
     })
 }
 export const allTimeHour = getAllTimeArray();

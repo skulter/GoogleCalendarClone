@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction, useState } from 'react';
 import MainCalendar from "./MainCalendar";
 import tw, { styled } from 'twin.macro';
 import Leftbar from '../components/Leftbar';
@@ -8,10 +9,15 @@ const MainContainer = styled.main`
 const MainWrapper = styled.div`
     ${tw`flex flex-1 max-h-[calc(100vh - 5rem)] overflow-scroll`}
 `
-const Main = () => {
+
+interface MainProps {
+    isOpen: boolean
+    setIsOpenModal: Dispatch<SetStateAction<boolean>>
+}
+const Main = ({ isOpen, setIsOpenModal }: MainProps) => {
     return (
         <MainContainer>
-            <Leftbar />
+            <Leftbar isOpen={isOpen} setIsOpenModal={setIsOpenModal} />
             <MainWrapper>
                 <MainCalendar />
             </MainWrapper>

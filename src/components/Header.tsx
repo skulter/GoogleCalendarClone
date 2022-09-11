@@ -1,9 +1,11 @@
-import { Component } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import tw, { styled } from 'twin.macro';
 import Menu from '/menu.svg';
 import Calendar from '/calendar.png';
 import ChevronLeft from '/chevron_left.svg';
 import ChevronRight from '/chevron_right.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { currentCalendar, nextWeek, prevWeek, setDay } from '../store/modules/calendar';
 
 const HeaderContainer = styled.header`
     ${tw`flex items-center w-full h-16 p-2 border-b border-gray-300 `};
@@ -28,10 +30,7 @@ const DateContainer = styled.div`
 const TodayBtnWrapper = styled.div`
      ${tw`flex items-center h-9`};
      .today{
-        ${tw`text-sm border rounded border-gray-300 px-3 py-1.5 mr-4 text-gray-700 cursor-pointer`};
-        :hover{
-            ${tw`bg-gray-100`}
-        }
+        ${tw`text-sm border rounded border-gray-300 px-3 py-1.5 mr-4 text-gray-700 cursor-pointer hover:bg-gray-100`};
      }
      .chevron{
         ${tw`flex items-center justify-center cursor-pointer w-8 h-8 rounded-full hover:bg-gray-100`};
@@ -43,33 +42,39 @@ const TodayBtnWrapper = styled.div`
         }
     }
 `
+interface HeaderProps {
+    setIsOpen: Dispatch<SetStateAction<boolean>>
+}
+const Header = ({ setIsOpen }: HeaderProps) => {
+    const { current } = useSelector(currentCalendar);
+    const dispatch = useDispatch();
+    return (
+        <HeaderContainer>
+            <MenuContainer>
+                <MenuBtnWrapper onClick={() => { setIsOpen(prev => !prev) }}><img src={Menu} /></MenuBtnWrapper>
+                <CalendarWrapper>
+                    <img src={Calendar} width='40px' height='40px' />
+                    <span>캘린더</span>
+                </CalendarWrapper>
+            </MenuContainer>
+            <DateContainer>
+                <TodayBtnWrapper>
+                    <span className='today' onClick={() => { dispatch(setDay(new Date().toString())) }}>오늘</span>
+                    <span className='chevron' onClick={() => { dispatch(prevWeek()) }}>
+                        <img src={ChevronLeft} />
+                    </span>
+                    <span className='chevron' onClick={() => { dispatch(nextWeek()) }}>
+                        <img src={ChevronRight} />
+                    </span>
+                    <div>
+                        <span className='todayDate'>{current.year}년 {current.month}월</span>
+                    </div>
+                </TodayBtnWrapper>
+                <span className="px-3 py-1 mx-3 border border-gray-200 rounded text-sm">주</span>
+            </DateContainer>
 
-export class Header extends Component {
-    render() {
-        return (
-            <HeaderContainer>
-                <MenuContainer>
-                    <MenuBtnWrapper><img src={Menu} /></MenuBtnWrapper>
-                    <CalendarWrapper>
-                        <img src={Calendar} width='40px' height='40px' />
-                        <span>캘린더</span>
-                    </CalendarWrapper>
-                </MenuContainer>
-                <DateContainer>
-                    <TodayBtnWrapper>
-                        <span className='today'>오늘</span>
-                        <span className='chevron'><img src={ChevronLeft} /></span>
-                        <span className='chevron fill-blue-500'><img src={ChevronRight} /></span>
-                        <div>
-                            <span className='todayDate'>2022년 9월 8일</span>
-                        </div>
-                    </TodayBtnWrapper>
-                    <span className="px-3 py-1 mx-3 border border-gray-200 rounded text-sm">주</span>
-                </DateContainer>
-
-            </HeaderContainer>
-        )
-    }
+        </HeaderContainer>
+    )
 }
 
 export default Header

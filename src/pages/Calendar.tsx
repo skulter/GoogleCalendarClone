@@ -1,23 +1,16 @@
+import { useState } from 'react';
+import AddScheduleModal from '../components/AddScheduleModal';
 import Header from '../components/Header';
 import Main from '../components/Main';
-import styled from 'styled-components';
-import tw from 'twin.macro';
-
-
-const StyledButton = styled.button<{ test: string }>`
-    ${tw`py-1 px-8 uppercase rounded-lg border duration-200 bg-gray-300`}; // added duration-200 (optional)
-
-    &:hover {
-        ${tw`text-sm`}
-        color : ${(props) => props.test}
-    }
-`;
 
 const Calendar = () => {
+    const [isOpen, setIsOpen] = useState<boolean>(true);
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
     return (
         <>
-            <Header />
-            <Main />
+            <Header setIsOpen={setIsOpen} />
+            <Main isOpen={isOpen} setIsOpenModal={setIsOpenModal} />
+            <AddScheduleModal isOpenModal={isOpenModal} setIsOpenModal={setIsOpenModal} />
         </>
     )
 };
