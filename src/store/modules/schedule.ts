@@ -1,35 +1,44 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from "../index";
-import { scheduleType } from '../../index'
+import { schdulesType, scheduleType } from '../../index'
+import { format } from 'date-fns';
 
-const initialState: scheduleType[] = [];
-
-const getInitialState = (): scheduleType[] => {
-    const initState = localStorage.getItem('schedules') ? JSON.parse(localStorage.getItem('schedules') as string) : initialState
-    return initState;
+const today = new Date();
+const todayText = format(today, 'yyyy-MM-dd');
+export const initialSchdulesState: schdulesType = {
+    currentSchedule: {
+        id: '',
+        date: todayText,
+        startDate: { hour: 0, min: 0 },
+        endDate: { hour: 0, min: 0 },
+        title: ''
+    },
+    schedules: []
 };
+
 
 const scheduleSlice = createSlice({
     name: 'schedule',
-    initialState: getInitialState(),
+    initialState: initialSchdulesState,
     reducers: {
-        addSchedule: (state: scheduleType[], action: PayloadAction<scheduleType>) => {
-            state.push({
+        setCurrentSchedule: (state: schdulesType, action: PayloadAction<scheduleType>) => {
+            return { ...state, currentSchedule: action.payload }
+        },
+        addSchedule: (state: schdulesType, action: PayloadAction<scheduleType>) => {
+            state.schedules.push({
                 ...action.payload,
                 id: Math.random().toString(36).substring(2, 16)
             })
-            localStorage.setItem('schedules', JSON.stringify(state));
         },
-        deleteSchedule: (state: scheduleType[], action: PayloadAction<string>) => {
-            const currentState = state.filter((data) => (
+        deleteSchedule: (state: schdulesType, action: PayloadAction<string>) => {
+            const currentState = state.schedules.filter((data) => (
                 data.id !== action.payload
             ))
-            localStorage.setItem('schedules', JSON.stringify(currentState));
-            return currentState;
+            return { ...state, schedules: currentState };
         }
     }
 });
 
-export const { addSchedule, deleteSchedule } = scheduleSlice.actions;
+export const { addSchedule, deleteSchedule, setCurrentSchedule } = scheduleSlice.actions;
 export const schedules = (state: RootState) => state.schedule;
 export default scheduleSlice.reducer

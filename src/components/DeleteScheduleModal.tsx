@@ -23,7 +23,7 @@ const DeleteScheduleModalCloseWrapper = styled.div`
 `
 
 const DeleteScheduleModalFormWrapper = styled.div`
-    ${tw`flex flex-col w-full p-3 cursor-pointer hover:bg-gray-200`}
+    ${tw`flex flex-col w-full p-3 cursor-pointer rounded-b-lg hover:bg-gray-200`}
 `
 
 interface DeleteScheduleModalProps {
@@ -34,7 +34,6 @@ interface DeleteScheduleModalProps {
 
 const DeleteScheduleModal = ({ isOpenModal, setIsOpenModal, deleteModalInfo }: DeleteScheduleModalProps) => {
     const dispatch = useDispatch();
-
     return (
         <DeleteScheduleModalContainer className='deleteModal' isOpenModal={isOpenModal} deleteModalInfo={deleteModalInfo}
             onClick={(e: MouseEvent<HTMLDivElement>) => {
@@ -44,10 +43,11 @@ const DeleteScheduleModal = ({ isOpenModal, setIsOpenModal, deleteModalInfo }: D
                 <DeleteScheduleModalCloseWrapper>
                     <div onClick={() => { setIsOpenModal(false); }}> x </div>
                 </DeleteScheduleModalCloseWrapper >
-                <DeleteScheduleModalFormWrapper onClick={() => {
-                    dispatch(deleteSchedule(deleteModalInfo.id));
-                    setIsOpenModal(false);
-                }}>
+                <DeleteScheduleModalFormWrapper
+                    onClick={() => {
+                        dispatch(deleteSchedule(deleteModalInfo.id));
+                        setIsOpenModal(false);
+                    }}>
                     <div>삭제</div>
                 </DeleteScheduleModalFormWrapper >
             </div>

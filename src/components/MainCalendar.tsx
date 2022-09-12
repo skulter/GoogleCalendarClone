@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { currentCalendar } from "../store/modules/calendar";
 import { schedules } from "../store/modules/schedule";
 import { format } from "date-fns";
-import { MouseEvent, MouseEventHandler, useState } from "react";
+import { MouseEvent, useState } from "react";
 import DeleteScheduleModal from "./DeleteScheduleModal";
 
 const MainCalendarContainer = styled.div`
@@ -101,8 +101,8 @@ const MainCalendar = () => {
                             {allTimeHour.map((hour: allTime) => (
                                 <div key={`CalendarTable${day}${hour.hour} `} className="border-b border-l border-solid min-w-[80px] min-h-[50px]" />
                             ))}
-                            {schedulesArr.filter((schedule) => {
-                                return schedule.date === `${current.year}-${current.month.toString().padStart(2, '0')}-${current.days[index]}`
+                            {schedulesArr.schedules.filter((schedule) => {
+                                return schedule.date === `${format(new Date(current.year, current.month - 1, current.days[index]), 'yyyy-MM-dd')}`
                             }).map(data => {
                                 let height = (data.endDate.hour - data.startDate.hour) * 50 - data.startDate.min * 0.8 + data.endDate.min * 0.8; // 60분 /  각 행의 높이 50 = 0.8333
                                 const top = data.startDate.hour * 50 + data.startDate.min * 0.8;

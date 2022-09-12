@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { createSelectTime } from '../util/selectTime'
 import { scheduleType, selectTimeType } from '..';
 import { useDispatch, useSelector } from 'react-redux';
-import { addSchedule } from '../store/modules/schedule'
+import schedule, { addSchedule, initialSchdulesState, schedules, setCurrentSchedule } from '../store/modules/schedule'
 import DatePicker from './DatePicker';
 import { currentCalendar } from '../store/modules/calendar';
 
@@ -42,37 +42,27 @@ interface AddScheduleModalProps {
     setIsOpenModal: Dispatch<SetStateAction<boolean>>
 }
 
-const today = new Date();
-const tadayText = format(today, 'yyyy-MM-dd');
-const scheduleInitialState: scheduleType = {
-    id: '',
-    date: tadayText,
-    startDate: { hour: 0, min: 0 },
-    endDate: { hour: 0, min: 0 },
-    title: ''
-};
-
 const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps) => {
     const dispatch = useDispatch();
-    const [datePickerModalIsOpen, setDatePickerModalIsOpen] = useState<boolean>(false);
-    const startSeleteTime = createSelectTime();
-    const [endSeleteTime, setEndSelectTime] = useState(createSelectTime());
-    const [schedule, setSchedule] = useState<scheduleType>(scheduleInitialState);
     const { selectDay } = useSelector(currentCalendar);
+    const { currentSchedule } = useSelector(schedules);
+    const [datePickerModalIsOpen, setDatePickerModalIsOpen] = useState<boolean>(false);
+    const [endSeleteTime, setEndSelectTime] = useState(createSelectTime());
+    const startSeleteTime = createSelectTime();
     const displaySelectDay = format(selectDay, 'yyyy-MM-dd');
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        dispatch(addSchedule(currentSchedule));
+        dispatch(setCurrentSchedule(initialSchdulesState.currentSchedule));
         setIsOpenModal(false);
-        dispatch(addSchedule(schedule));
-        setSchedule(scheduleInitialState)
     };
 
     const handleStartDateChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const [hour, min] = e.target.value.split(":");
         const startIndex = (e.target as HTMLSelectElement).selectedIndex; // 선택된 option index
         setEndSelectTime(createSelectTime(startIndex))
-        setSchedule({
-            ...schedule,
+        dispatch(setCurrentSchedule({
+            ...currentSchedule,
             startDate: {
                 hour: parseInt(hour),
                 min: parseInt(min)
@@ -81,22 +71,23 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                 hour: parseInt(hour),
                 min: parseInt(min)
             }
-        })
+        }))
     };
 
     const handleEndDateChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const [hour, min] = e.target.value.split(":");
-        setSchedule({
-            ...schedule, endDate: {
+        dispatch(setCurrentSchedule({
+            ...currentSchedule, endDate: {
                 hour: parseInt(hour),
                 min: parseInt(min)
             }
-        })
+        }));
     };
 
     const modalClose = () => {
+        dispatch(setCurrentSchedule(initialSchdulesState.currentSchedule));
+        setDatePickerModalIsOpen(false);
         setIsOpenModal(false);
-        setSchedule(scheduleInitialState);
     }
     return (
         <AddScheduleModalContainer className="addModal" isOpenModal={isOpenModal}
@@ -116,25 +107,20 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                             placeholder="제목 추가"
                             required
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                                setSchedule({ ...schedule, title: e.target.value })
+                                dispatch(setCurrentSchedule({ ...currentSchedule, title: e.target.value }));
                             }}
-                            value={schedule.title}
+                            value={currentSchedule.title}
                         />
                         <AddScheduleModalFormDataContainer>
-                            {/* <input type="date"
-                                value={schedule.date}
-                                className="w-[110px]"
-                                onChange={(e) => {
-                                    setSchedule({ ...schedule, date: format(new Date(e.target.value), 'yyyy-MM-dd') });
-                                }}
-                            /> */}
-                            <SelectBox as="div" className='relative' onClick={() => {
+                            <SelectBox as="div" className='datePicketModal relative' onClick={(e: MouseEvent<HTMLDivElement>) => {
                                 setDatePickerModalIsOpen(prev => !prev);
                             }}>
                                 {displaySelectDay}
-                                {datePickerModalIsOpen && <DatePicker isOpen={true} isModal />}
+                                {datePickerModalIsOpen &&
+                                    <DatePicker isOpen={datePickerModalIsOpen} isModal />
+                                }
                             </SelectBox>
-                            <SelectBox onChange={handleStartDateChange} value={`${schedule.startDate.hour}:${schedule.startDate.min}`}>
+                            <SelectBox onChange={handleStartDateChange} value={`${currentSchedule.startDate.hour}:${currentSchedule.startDate.min}`}>
                                 {startSeleteTime.map((time, index) => (
                                     <option
                                         key={time.showText + index}
@@ -146,7 +132,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                             </SelectBox>
                             -
                             <SelectBox
-                                onChange={handleEndDateChange} value={`${schedule.endDate.hour}:${schedule.endDate.min}`}>
+                                onChange={handleEndDateChange} value={`${currentSchedule.endDate.hour}:${currentSchedule.endDate.min}`}>
                                 {endSeleteTime.map((time, index) => (
                                     <option
                                         key={time.showText + index}

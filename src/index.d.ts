@@ -19,6 +19,11 @@ export interface scheduleType {
     startDate: scheduleTime,
     endDate: scheduleTime,
 }
+
+export interface schdulesType {
+    currentSchedule: scheduleType
+    schedules: scheduleType[]
+}
 export interface currentCalendarType {
     days: number[],
     month: number,
