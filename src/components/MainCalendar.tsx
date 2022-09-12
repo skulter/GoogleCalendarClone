@@ -47,7 +47,7 @@ const ScheduleInfo = styled.div<{ height: string, top: string }>`
 
 const MainCalendar = () => {
     const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
-    const [deleteModalInfo, setDeleteModalInfo] = useState<deleteModalInfoType>({ id: 0, position: { x: 0, y: 0 } });
+    const [deleteModalInfo, setDeleteModalInfo] = useState<deleteModalInfoType>({ id: '', position: { x: 0, y: 0 } });
     const schedulesArr = useSelector(schedules);
     const { current, today } = useSelector(currentCalendar);
 
@@ -55,16 +55,14 @@ const MainCalendar = () => {
         e.preventDefault();
         setDeleteModalOpen(true);
         setDeleteModalInfo({
-            id: parseInt(e.currentTarget.dataset.schedule as string),
+            id: e.currentTarget.dataset.schedule as string,
             position: {
                 x: e.clientX,
                 y: e.clientY
             }
         });
     };
-    // const handleScheduleClick = (e: MouseEvent<HTMLDivElement>) => {
-    //     e.currentTarget.style.zIndex = '50';
-    // }
+
     return (
         <MainCalendarContainer>
             <MainCalendarHeader>
@@ -110,9 +108,8 @@ const MainCalendar = () => {
                                         title={`${data.startDate.hour}시${data.startDate.min}분 - ${data.endDate.hour}시${data.endDate.min}분`}
                                         data-schedule={data.id}
                                         onContextMenu={handleContextMenu}
-                                    // onClick={handleScheduleClick}
                                     >
-                                        <div>{data.title}{data.id}</div>
+                                        <div>{data.title}</div>
                                         <div>{data.startDate.hour}시{data.startDate.min}분 - {data.endDate.hour}시{data.endDate.min}분</div>
                                     </ScheduleInfo>
                                 )

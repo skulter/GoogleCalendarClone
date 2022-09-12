@@ -1,12 +1,12 @@
 export const getWeekDays = (selectDay: string) => {
-    const selectDayforDate = new Date(selectDay);
-    let weekStart = selectDayforDate.getDate() - selectDayforDate.getDay();
-    if (weekStart < 1) {
-        const minusDate = weekStart;
-        weekStart = new Date(selectDayforDate.getFullYear(), selectDayforDate.getMonth(), minusDate).getDate();
-    }
+    const currentDay = new Date(selectDay);
+    const currentYear = currentDay.getFullYear();
+    const currentMonth = currentDay.getMonth();
+    const currentDate = currentDay.getDate();
+    const currentDayOfWeek = currentDay.getDay();
+
     const weekDays = [...Array(7).keys()].map((day) => (
-        weekStart + day
-    ));
+        new Date(currentYear, currentMonth, currentDate + (day - currentDayOfWeek)).getDate()
+    ))
     return weekDays;
 }

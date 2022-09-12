@@ -1,16 +1,17 @@
-import { ChangeEvent, Dispatch, FormEvent, SetStateAction, useState } from 'react';
+import { Dispatch, MouseEvent, SetStateAction } from 'react';
 import tw, { styled } from 'twin.macro';
-import { format } from "date-fns";
-import { createSelectTime } from '../util/selectTime'
-import { deleteModalInfoType, scheduleType, selectTimeType } from '..';
+import { deleteModalInfoType } from '..';
 import { useDispatch } from 'react-redux';
-import { addSchedule, deleteSchedule } from '../store/modules/schedule'
+import { deleteSchedule } from '../store/modules/schedule'
 
 const DeleteScheduleModalContainer = styled.div<{ isOpenModal: boolean, deleteModalInfo: deleteModalInfoType }>`
-    ${tw`flex flex-col w-[200px] bg-white rounded-lg shadow-xl z-50`}
+    ${tw`flex w-full h-full top-0 left-0 z-50 relative`}
     ${props => props.isOpenModal ? tw`fixed` : tw`invisible`}
-    top: ${props => props.deleteModalInfo.position.y}px;
-    left: ${props => props.deleteModalInfo.position.x}px;
+    >div{
+        ${tw`flex flex-col w-[200px] h-20 bg-white rounded-lg shadow-xl z-50 absolute`}
+        top: ${props => props.deleteModalInfo.position.y}px;
+        left: ${props => props.deleteModalInfo.position.x}px;
+    }
 `;
 
 const DeleteScheduleModalCloseWrapper = styled.div`
@@ -36,20 +37,21 @@ const DeleteScheduleModal = ({ isOpenModal, setIsOpenModal, deleteModalInfo }: D
     const dispatch = useDispatch();
 
     return (
-        <DeleteScheduleModalContainer isOpenModal={isOpenModal} deleteModalInfo={deleteModalInfo}>
-            <DeleteScheduleModalCloseWrapper className='flex justify-end itmes-center w-full bg-gray-100 text-2xl pr-3 pb-1 rounded-t-lg' >
-                <div onClick={() => {
+        <DeleteScheduleModalContainer className='deleteModal' isOpenModal={isOpenModal} deleteModalInfo={deleteModalInfo}
+            onClick={(e: MouseEvent<HTMLDivElement>) => {
+                (e.target as HTMLDivElement).classList.contains('deleteModal') && setIsOpenModal(false);
+            }}>
+            <div>
+                <DeleteScheduleModalCloseWrapper>
+                    <div onClick={() => { setIsOpenModal(false); }}> x </div>
+                </DeleteScheduleModalCloseWrapper >
+                <DeleteScheduleModalFormWrapper onClick={() => {
+                    dispatch(deleteSchedule(deleteModalInfo.id));
                     setIsOpenModal(false);
                 }}>
-                    x
-                </div>
-            </DeleteScheduleModalCloseWrapper >
-            <DeleteScheduleModalFormWrapper onClick={() => {
-                dispatch(deleteSchedule(deleteModalInfo.id));
-                setIsOpenModal(false);
-            }}>
-                <div>삭제</div>
-            </DeleteScheduleModalFormWrapper >
+                    <div>삭제</div>
+                </DeleteScheduleModalFormWrapper >
+            </div>
         </DeleteScheduleModalContainer >
     );
 };

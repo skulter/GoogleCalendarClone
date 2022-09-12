@@ -13,7 +13,6 @@ const LeftbarContainer = styled.div<{ isOpen: boolean }>`
       ${tw`flex flex-col ml-3`}
       ${tw`transition-all ease-linear duration-100`}
       ${props => props.isOpen ? tw`w-64` : tw`w-0`}
-      
 `;
 
 const LeftbarDatePickerWrapper = styled.div<{ isOpen: boolean }>`

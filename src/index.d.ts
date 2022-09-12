@@ -12,7 +12,7 @@ export interface selectTimeType extends scheduleTime {
     showText: string
 }
 export interface scheduleType {
-    id: number,
+    id: string,
     title: string,
     date: string,
     startDate: scheduleTime,
@@ -31,7 +31,7 @@ export interface calendarType {
 }
 
 export interface deleteModalInfoType {
-    id: number,
+    id: string,
     position: {
         x: number,
         y: number
