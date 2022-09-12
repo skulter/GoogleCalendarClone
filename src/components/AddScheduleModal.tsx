@@ -3,8 +3,10 @@ import tw, { styled } from 'twin.macro';
 import { format } from "date-fns";
 import { createSelectTime } from '../util/selectTime'
 import { scheduleType, selectTimeType } from '..';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addSchedule } from '../store/modules/schedule'
+import DatePicker from './DatePicker';
+import { currentCalendar } from '../store/modules/calendar';
 
 const AddScheduleModalContainer = styled.div<{ isOpenModal: boolean }>`
     ${tw`flex justify-center items-center w-full h-full top-0 left-0 `}
@@ -27,11 +29,12 @@ const AddScheduleModalFormWrapper = styled.div`
 `
 
 const AddScheduleModalFormDataContainer = styled.div`
-    ${tw`mt-3`}
+    ${tw`flex mt-3`}
 `
 
 const SelectBox = styled.select`
-    ${tw`outline-none border-transparent border-2 border-solid focus:border-b-blue-500 focus:bg-gray-100 hover:bg-gray-100`}
+    ${tw`outline-none border-transparent border-2 border-solid focus:border-b-blue-500 focus:bg-gray-100 hover:bg-gray-100 mx-1 px-1`}
+    appearance:none;
 `
 
 interface AddScheduleModalProps {
@@ -51,10 +54,12 @@ const scheduleInitialState: scheduleType = {
 
 const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps) => {
     const dispatch = useDispatch();
+    const [datePickerModalIsOpen, setDatePickerModalIsOpen] = useState<boolean>(false);
     const startSeleteTime = createSelectTime();
     const [endSeleteTime, setEndSelectTime] = useState(createSelectTime());
     const [schedule, setSchedule] = useState<scheduleType>(scheduleInitialState);
-
+    const { selectDay } = useSelector(currentCalendar);
+    const displaySelectDay = format(selectDay, 'yyyy-MM-dd');
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsOpenModal(false);
@@ -116,13 +121,19 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                             value={schedule.title}
                         />
                         <AddScheduleModalFormDataContainer>
-                            <input type="date"
+                            {/* <input type="date"
                                 value={schedule.date}
                                 className="w-[110px]"
                                 onChange={(e) => {
                                     setSchedule({ ...schedule, date: format(new Date(e.target.value), 'yyyy-MM-dd') });
                                 }}
-                            />
+                            /> */}
+                            <SelectBox as="div" className='relative' onClick={() => {
+                                setDatePickerModalIsOpen(prev => !prev);
+                            }}>
+                                {displaySelectDay}
+                                {datePickerModalIsOpen && <DatePicker isOpen={true} isModal />}
+                            </SelectBox>
                             <SelectBox onChange={handleStartDateChange} value={`${schedule.startDate.hour}:${schedule.startDate.min}`}>
                                 {startSeleteTime.map((time, index) => (
                                     <option
