@@ -31,7 +31,7 @@ const AddScheduleModalFormDataContainer = styled.div`
 `
 
 const SelectBox = styled.select`
-    ${tw`outline-none border-transparent border-2 border-solid focus:border-b-indigo-500 focus:bg-gray-100`}
+    ${tw`outline-none border-transparent border-2 border-solid focus:border-b-blue-500 focus:bg-gray-100 hover:bg-gray-100`}
 `
 
 interface AddScheduleModalProps {
@@ -51,8 +51,8 @@ const scheduleInitialState: scheduleType = {
 
 const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps) => {
     const dispatch = useDispatch();
-    const startSeleteTimeData = createSelectTime();
-    const endSeleteTimeData = createSelectTime();
+    const startSeleteTime = createSelectTime();
+    const [endSeleteTime, setEndSelectTime] = useState(createSelectTime());
     const [schedule, setSchedule] = useState<scheduleType>(scheduleInitialState);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -63,9 +63,16 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
     };
 
     const handleStartDateChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        const [hour, min] = e.currentTarget.value.split(":");
+        const [hour, min] = e.target.value.split(":");
+        const startIndex = (e.target as HTMLSelectElement).selectedIndex; // 선택된 option index
+        setEndSelectTime(createSelectTime(startIndex))
         setSchedule({
-            ...schedule, startDate: {
+            ...schedule,
+            startDate: {
+                hour: parseInt(hour),
+                min: parseInt(min)
+            },
+            endDate: {
                 hour: parseInt(hour),
                 min: parseInt(min)
             }
@@ -73,7 +80,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
     };
 
     const handleEndDateChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        const [hour, min] = e.currentTarget.value.split(":");
+        const [hour, min] = e.target.value.split(":");
         setSchedule({
             ...schedule, endDate: {
                 hour: parseInt(hour),
@@ -100,7 +107,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                 <AddScheduleModalFormWrapper>
                     <form onSubmit={handleSubmit}>
                         <input type='text'
-                            className='w-full outline-none border-transparent border-2 border-solid border-b-zinc-100 '
+                            className='w-full outline-none border-transparent border-2 border-solid border-b-zinc-100 focus:border-b-blue-500 '
                             placeholder="제목 추가"
                             required
                             onChange={(e: ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +124,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                                 }}
                             />
                             <SelectBox onChange={handleStartDateChange} value={`${schedule.startDate.hour}:${schedule.startDate.min}`}>
-                                {startSeleteTimeData.map((time, index) => (
+                                {startSeleteTime.map((time, index) => (
                                     <option
                                         key={time.showText + index}
                                         value={`${time.hour}:${time.min}`}
@@ -129,7 +136,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                             -
                             <SelectBox
                                 onChange={handleEndDateChange} value={`${schedule.endDate.hour}:${schedule.endDate.min}`}>
-                                {endSeleteTimeData.map((time, index) => (
+                                {endSeleteTime.map((time, index) => (
                                     <option
                                         key={time.showText + index}
                                         value={`${time.hour}:${time.min}`}

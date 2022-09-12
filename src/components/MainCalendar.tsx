@@ -61,7 +61,7 @@ const MainCalendar = () => {
         e.preventDefault();
         setDeleteModalOpen(true);
         setDeleteModalInfo({
-            id: (e.target as HTMLDivElement).dataset.schedule as string,
+            id: e.currentTarget.dataset.schedule as string,
             position: {
                 x: e.clientX,
                 y: e.clientY
@@ -108,7 +108,7 @@ const MainCalendar = () => {
                                 const top = data.startDate.hour * 50 + data.startDate.min * 0.8;
                                 return (
                                     <ScheduleInfo
-                                        key={`${data.title}${data.date}`}
+                                        key={`${data.id}${data.date}`}
                                         height={`${height}px`}
                                         top={`${top}px`}
                                         title={`${data.startDate.hour}시${data.startDate.min}분 - ${data.endDate.hour}시${data.endDate.min}분`}

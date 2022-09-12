@@ -9,6 +9,7 @@ interface scheduleTime {
 }
 
 export interface selectTimeType extends scheduleTime {
+    id: number,
     showText: string
 }
 export interface scheduleType {
