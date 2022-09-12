@@ -12,7 +12,7 @@ const AddScheduleModalContainer = styled.div<{ isOpenModal: boolean }>`
     >div{
         ${tw`top-32 left-5 -flex flex-col w-[360px] bg-white rounded-lg shadow-[ 0px 0px 50px -5px rgba(0,0,0,0.50)]`}
     }
-`;
+`
 
 const AddScheduleModalCloseWrapper = styled.div`
     ${tw`flex justify-end w-full bg-gray-100 text-2xl pr-3 pb-1 rounded-t-lg`}
@@ -20,18 +20,19 @@ const AddScheduleModalCloseWrapper = styled.div`
     div{
         ${tw`cursor-pointer`}
     }
-`;
+`
 
 const AddScheduleModalFormWrapper = styled.div`
     ${tw`flex flex-col w-full p-4`}
-`;
+`
+
 const AddScheduleModalFormDataContainer = styled.div`
     ${tw`mt-3`}
-`;
+`
 
 const SelectBox = styled.select`
     ${tw`outline-none border-transparent border-2 border-solid focus:border-b-indigo-500 focus:bg-gray-100`}
-`;
+`
 
 interface AddScheduleModalProps {
     isOpenModal: boolean
@@ -50,7 +51,8 @@ const scheduleInitialState: scheduleType = {
 
 const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps) => {
     const dispatch = useDispatch();
-    const seleteTimeData = createSelectTime();
+    const startSeleteTimeData = createSelectTime();
+    const endSeleteTimeData = createSelectTime();
     const [schedule, setSchedule] = useState<scheduleType>(scheduleInitialState);
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -115,7 +117,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                                 }}
                             />
                             <SelectBox onChange={handleStartDateChange} value={`${schedule.startDate.hour}:${schedule.startDate.min}`}>
-                                {seleteTimeData.map((time, index) => (
+                                {startSeleteTimeData.map((time, index) => (
                                     <option
                                         key={time.showText + index}
                                         value={`${time.hour}:${time.min}`}
@@ -127,7 +129,7 @@ const AddScheduleModal = ({ isOpenModal, setIsOpenModal }: AddScheduleModalProps
                             -
                             <SelectBox
                                 onChange={handleEndDateChange} value={`${schedule.endDate.hour}:${schedule.endDate.min}`}>
-                                {seleteTimeData.map((time, index) => (
+                                {endSeleteTimeData.map((time, index) => (
                                     <option
                                         key={time.showText + index}
                                         value={`${time.hour}:${time.min}`}

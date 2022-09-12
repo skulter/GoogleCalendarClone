@@ -65,14 +65,13 @@ const classNames: ClassNames = {
     table: 'table',
     row: 'row',
     cell: 'cell',
-
-};
+}
 
 const modifiersClassNames: ModifiersClassNames = {
     today: 'today',
     selected: 'selected',
     outside: 'outside'
-};
+}
 
 interface LeftbarProps {
     isOpen: boolean,

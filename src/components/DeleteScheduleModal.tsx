@@ -12,7 +12,7 @@ const DeleteScheduleModalContainer = styled.div<{ isOpenModal: boolean, deleteMo
         top: ${props => props.deleteModalInfo.position.y}px;
         left: ${props => props.deleteModalInfo.position.x}px;
     }
-`;
+`
 
 const DeleteScheduleModalCloseWrapper = styled.div`
     ${tw`flex justify-end w-full bg-gray-100 text-2xl pr-3 pb-1 rounded-t-lg`}
@@ -20,12 +20,11 @@ const DeleteScheduleModalCloseWrapper = styled.div`
     div{
         ${tw`cursor-pointer`}
 }
-`;
+`
 
 const DeleteScheduleModalFormWrapper = styled.div`
     ${tw`flex flex-col w-full p-3 cursor-pointer hover:bg-gray-200`}
-`;
-
+`
 
 interface DeleteScheduleModalProps {
     isOpenModal: boolean

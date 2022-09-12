@@ -28,7 +28,7 @@ const scheduleSlice = createSlice({
             return currentState;
         }
     }
-})
+});
 
 export const { addSchedule, deleteSchedule } = scheduleSlice.actions;
 export const schedules = (state: RootState) => state.schedule;

@@ -6,10 +6,10 @@ import Leftbar from '../components/Leftbar';
 const MainContainer = styled.main`
     ${tw`flex mt-4`}
 `
+
 const MainWrapper = styled.div`
     ${tw`flex flex-1 max-h-[calc(100vh - 5rem)] overflow-scroll`}
 `
-
 interface MainProps {
     isOpen: boolean
     setIsOpenModal: Dispatch<SetStateAction<boolean>>

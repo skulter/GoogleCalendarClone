@@ -12,34 +12,40 @@ import DeleteScheduleModal from "./DeleteScheduleModal";
 const MainCalendarContainer = styled.div`
     ${tw`w-full`}
 `
+
 const MainCalendarHeader = styled.div`
      ${tw`flex h-[84px] top-0 sticky bg-white border-b border-solid z-20`}
 `
+
 const GreenwichMeanTimeWrapper = styled.div`
      ${tw`flex items-end text-[10px] min-w-[80px]`}
 `
+
 const DayOfWeekContainer = styled.div`
      ${tw`flex w-full relative`}
      >div {
         ${tw`flex flex-col justify-center flex-1 min-w-[80px] text-center`}
      }
 `
+
 const MainCalendarBody = styled.div`
      ${tw`flex`}
 `
+
 const MainCalendarHoursWrapper = styled.div`
      ${tw`min-w-[80px]`}
      div{
         ${tw`flex flex-col text-[12px] h-[50px]`}
      }
 `
+
 const MainCalendarTable = styled.div`
     ${tw`flex w-full z-0`}
 `
 
 const ScheduleInfo = styled.div<{ height: string, top: string }>`
-    ${tw`flex flex-1 flex-col w-5/6 min-h-[25px] absolute 
-         bg-blue-500 px-2 py-1 text-sm text-white rounded-lg absolute overflow-y-hidden text-[12px] 
+    ${tw`flex flex-1 flex-col absolute w-5/6 min-h-[25px]
+         bg-blue-500 px-2 py-1 text-sm text-white rounded-lg overflow-y-hidden text-[12px] 
          border-white border cursor-pointer hover:bg-blue-400`}
     height: ${props => props.height};
     top: ${props => props.top};
@@ -55,7 +61,7 @@ const MainCalendar = () => {
         e.preventDefault();
         setDeleteModalOpen(true);
         setDeleteModalInfo({
-            id: e.currentTarget.dataset.schedule as string,
+            id: (e.target as HTMLDivElement).dataset.schedule as string,
             position: {
                 x: e.clientX,
                 y: e.clientY

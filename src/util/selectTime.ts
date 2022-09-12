@@ -1,6 +1,7 @@
 import { selectTimeType } from "..";
 import { allTimeHour } from "./allTime";
 export const createSelectTime = () => {
+    console.log(allTimeHour)
     const minute = [0, 15, 30, 45,];
     return allTimeHour.map((hour): selectTimeType[] => {
         return minute.map(min => {

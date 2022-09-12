@@ -9,24 +9,28 @@ import { currentCalendar, nextWeek, prevWeek, setDay } from '../store/modules/ca
 
 const HeaderContainer = styled.header`
     ${tw`flex items-center w-full h-16 p-2 border-b border-gray-300 `};
-`;
+`
 
 const MenuContainer = styled.div`
       ${tw`flex items-center w-60 h-12`};
 `
+
 const MenuBtnWrapper = styled.div`
       ${tw`flex items-center justify-center w-12 p-3 m-1 cursor-pointer rounded-full hover:bg-gray-100`};
 `
+
 const CalendarWrapper = styled.div`
     ${tw`flex items-center`};
     span{
         ${tw`pl-1 text-xl text-gray-500`};
     }
 `
+
 const DateContainer = styled.div`
     ${tw`flex items-center w-full h-12 justify-between`};
    
 `
+
 const TodayBtnWrapper = styled.div`
      ${tw`flex items-center h-9`};
      .today{
@@ -42,6 +46,7 @@ const TodayBtnWrapper = styled.div`
         }
     }
 `
+
 interface HeaderProps {
     setIsOpen: Dispatch<SetStateAction<boolean>>
 }

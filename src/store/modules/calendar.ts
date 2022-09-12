@@ -39,7 +39,7 @@ const calendarSlice = createSlice({
             state.current = createCurrentDate(action.payload);
         },
     }
-})
+});
 
 export const { setDay, prevWeek, nextWeek, setMonth } = calendarSlice.actions;
 export const currentCalendar = (state: RootState) => state.calendar;
