@@ -1,4 +1,3 @@
-# Ringle 과제
 
 ## Google Calendar Clone
 구글 캘린더 클론
